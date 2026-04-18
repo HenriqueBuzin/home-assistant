@@ -12,6 +12,7 @@ if ! grep -q "external_url" "$CONFIG_FILE" 2>/dev/null; then
 
 homeassistant:
   external_url: "${EXTERNAL_URL}"
+  internal_url: "http://127.0.0.1:8123"
 
 http:
   use_x_forwarded_for: true
