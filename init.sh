@@ -1,15 +1,13 @@
 #!/bin/bash
 
 CONFIG_FILE="/config/configuration.yaml"
-
 EXTERNAL_URL=${HA_URL}
 
 echo "🔧 Configurando Home Assistant para ${EXTERNAL_URL}..."
 
-if ! grep -q "external_url" "$CONFIG_FILE" 2>/dev/null; then
+mkdir -p /config
 
-  cat <<EOF >> "$CONFIG_FILE"
-
+cat <<EOF > "$CONFIG_FILE"
 homeassistant:
   external_url: "${EXTERNAL_URL}"
   internal_url: "http://127.0.0.1:8123"
@@ -38,6 +36,7 @@ http:
     - 198.41.128.0/17
 EOF
 
-fi
+echo "✅ Config final:"
+cat "$CONFIG_FILE"
 
 exec /init
