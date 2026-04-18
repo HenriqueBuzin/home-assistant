@@ -3,19 +3,9 @@
 CONFIG_FILE="/config/configuration.yaml"
 EXTERNAL_URL=${HA_URL}
 
-echo "🔧 Configurando Home Assistant para ${EXTERNAL_URL}..."
-
 mkdir -p /config
-touch "$CONFIG_FILE"
 
-# Se já tiver external_url, NÃO faz nada
-if grep -q "external_url" "$CONFIG_FILE"; then
-  echo "⚠️ external_url já existe, não vou alterar."
-else
-
-  echo "➕ Adicionando configuração..."
-
-  cat <<EOF >> "$CONFIG_FILE"
+cat <<EOF > "$CONFIG_FILE"
 default_config:
 
 frontend:
@@ -52,10 +42,5 @@ http:
     - 197.234.240.0/22
     - 198.41.128.0/17
 EOF
-
-fi
-
-echo "✅ Config final:"
-cat "$CONFIG_FILE"
 
 exec /init
