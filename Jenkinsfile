@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        disableConcurrentBuilds()
+    }
+
     stages {
         stage('Deploy Home Assistant') {
             steps {
@@ -17,13 +21,11 @@ pipeline {
 
                     echo "🚀 Branch detectada: ${branch}"
 
-                    // 🔥 IGNORA main (sucesso sem deploy)
                     if (branch == 'main') {
                         echo "✅ Branch main - sem deploy"
                         return
                     }
 
-                    // ❌ bloqueia qualquer outra não mapeada
                     if (!projectMap.containsKey(branch)) {
                         echo "⚠️ Branch ignorada: ${branch}"
                         return
@@ -31,9 +33,6 @@ pipeline {
 
                     def folder = projectMap[branch].folder
                     def service = projectMap[branch].service
-
-                    echo "📦 Projeto: ${folder}"
-                    echo "🐳 Serviço: ${service}"
 
                     sh """
                     set -e
@@ -48,22 +47,16 @@ pipeline {
                     echo "🔗 Aplicando .env..."
                     ln -sf /root/envs/${folder}.env .env
 
-                    echo "🐳 Subindo container..."
+                    echo "🛑 Derrubando serviço antigo..."
+                    docker compose down || true
+
+                    echo "🐳 Subindo serviço..."
                     docker compose up -d --build ${service}
 
                     echo "✅ Deploy concluído!"
                     """
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo "🎉 Pipeline OK - ${env.BRANCH_NAME}"
-        }
-        failure {
-            echo "💥 Pipeline FALHOU - ${env.BRANCH_NAME}"
         }
     }
 }
