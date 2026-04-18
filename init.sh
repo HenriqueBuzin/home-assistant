@@ -2,10 +2,17 @@
 
 CONFIG_FILE="/config/configuration.yaml"
 
-if ! grep -q "use_x_forwarded_for" "$CONFIG_FILE" 2>/dev/null; then
-  echo "🔧 Configurando proxy no Home Assistant..."
+echo "🔧 Definindo configuração completa do Home Assistant..."
 
-  cat <<EOF >> "$CONFIG_FILE"
+cat <<EOF > "$CONFIG_FILE"
+default_config:
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
 
 http:
   use_x_forwarded_for: true
@@ -13,6 +20,5 @@ http:
     - 127.0.0.1
     - 172.16.0.0/12
 EOF
-fi
 
 exec /init
