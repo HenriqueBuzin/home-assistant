@@ -21,11 +21,6 @@ pipeline {
 
                     echo "🚀 Branch detectada: ${branch}"
 
-                    if (branch == 'main') {
-                        echo "✅ Branch main - sem deploy"
-                        return
-                    }
-
                     if (!projectMap.containsKey(branch)) {
                         echo "⚠️ Branch ignorada: ${branch}"
                         return
