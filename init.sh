@@ -16,6 +16,14 @@ else
   echo "➕ Adicionando configuração..."
 
   cat <<EOF >> "$CONFIG_FILE"
+default_config:
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
 
 homeassistant:
   external_url: "${EXTERNAL_URL}"
