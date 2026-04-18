@@ -2,17 +2,16 @@
 
 CONFIG_FILE="/config/configuration.yaml"
 
-echo "🔧 Definindo configuração completa do Home Assistant..."
+EXTERNAL_URL=${HA_URL}
 
-cat <<EOF > "$CONFIG_FILE"
-default_config:
+echo "🔧 Configurando Home Assistant para ${EXTERNAL_URL}..."
 
-frontend:
-  themes: !include_dir_merge_named themes
+if ! grep -q "external_url" "$CONFIG_FILE" 2>/dev/null; then
 
-automation: !include automations.yaml
-script: !include scripts.yaml
-scene: !include scenes.yaml
+  cat <<EOF >> "$CONFIG_FILE"
+
+homeassistant:
+  external_url: "${EXTERNAL_URL}"
 
 http:
   use_x_forwarded_for: true
@@ -20,5 +19,7 @@ http:
     - 127.0.0.1
     - 172.16.0.0/12
 EOF
+
+fi
 
 exec /init
