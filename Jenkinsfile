@@ -6,7 +6,6 @@ pipeline {
             steps {
                 script {
 
-                    // 🔥 CORRETO para Multibranch
                     def branch = env.BRANCH_NAME
 
                     def projectMap = [
@@ -18,9 +17,16 @@ pipeline {
 
                     echo "🚀 Branch detectada: ${branch}"
 
-                    // ❌ bloqueia branches não mapeadas (importante)
+                    // 🔥 IGNORA main (sucesso sem deploy)
+                    if (branch == 'main') {
+                        echo "✅ Branch main - sem deploy"
+                        return
+                    }
+
+                    // ❌ bloqueia qualquer outra não mapeada
                     if (!projectMap.containsKey(branch)) {
-                        error "❌ Branch não suportada: ${branch}"
+                        echo "⚠️ Branch ignorada: ${branch}"
+                        return
                     }
 
                     def folder = projectMap[branch].folder
@@ -45,7 +51,7 @@ pipeline {
                     echo "🐳 Subindo container..."
                     docker compose up -d --build ${service}
 
-                    echo "✅ Deploy concluído com sucesso!"
+                    echo "✅ Deploy concluído!"
                     """
                 }
             }
@@ -54,10 +60,10 @@ pipeline {
 
     post {
         success {
-            echo "🎉 Deploy OK - ${env.BRANCH_NAME}"
+            echo "🎉 Pipeline OK - ${env.BRANCH_NAME}"
         }
         failure {
-            echo "💥 Deploy FALHOU - ${env.BRANCH_NAME}"
+            echo "💥 Pipeline FALHOU - ${env.BRANCH_NAME}"
         }
     }
 }
