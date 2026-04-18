@@ -1,7 +1,8 @@
 services:
   ha-fln:
+    build: .
+    image: ha-custom
     container_name: ha-fln
-    image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     ports:
       - "127.0.0.1:8123:8123"
@@ -14,8 +15,8 @@ services:
       - proxy-network
 
   ha-cxs:
+    image: ha-custom
     container_name: ha-cxs
-    image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     ports:
       - "127.0.0.1:8124:8123"
@@ -28,8 +29,8 @@ services:
       - proxy-network
 
   ha-fln-dev:
+    image: ha-custom
     container_name: ha-fln-dev
-    image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     ports:
       - "127.0.0.1:8125:8123"
@@ -42,8 +43,8 @@ services:
       - proxy-network
 
   ha-cxs-dev:
+    image: ha-custom
     container_name: ha-cxs-dev
-    image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     ports:
       - "127.0.0.1:8126:8123"
