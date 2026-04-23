@@ -5,7 +5,7 @@ services:
     container_name: ha-fln
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8123:8123"
+      - "8123:8123"
     volumes:
       - /root/volumes/home-assistant-fln:/config
       - /etc/localtime:/etc/localtime:ro
@@ -20,7 +20,7 @@ services:
     container_name: ha-cxs
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8124:8123"
+      - "8124:8123"
     volumes:
       - /root/volumes/home-assistant-cxs:/config
       - /etc/localtime:/etc/localtime:ro
@@ -35,7 +35,7 @@ services:
     container_name: ha-fln-dev
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8125:8123"
+      - "8125:8123"
     volumes:
       - /root/volumes/home-assistant-fln-dev:/config
       - /etc/localtime:/etc/localtime:ro
@@ -50,7 +50,7 @@ services:
     container_name: ha-cxs-dev
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8126:8123"
+      - "8126:8123"
     volumes:
       - /root/volumes/home-assistant-cxs-dev:/config
       - /etc/localtime:/etc/localtime:ro
