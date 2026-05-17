@@ -2,7 +2,6 @@ services:
   ha-fln:
     build: .
     image: ha-custom
-    container_name: ha-fln
     restart: unless-stopped
     ports:
       - "8123:8123"
@@ -17,7 +16,6 @@ services:
 
   ha-cxs:
     image: ha-custom
-    container_name: ha-cxs
     restart: unless-stopped
     ports:
       - "8124:8123"
@@ -32,7 +30,6 @@ services:
 
   ha-fln-dev:
     image: ha-custom
-    container_name: ha-fln-dev
     restart: unless-stopped
     ports:
       - "8125:8123"
@@ -47,7 +44,6 @@ services:
 
   ha-cxs-dev:
     image: ha-custom
-    container_name: ha-cxs-dev
     restart: unless-stopped
     ports:
       - "8126:8123"
