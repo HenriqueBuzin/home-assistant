@@ -59,4 +59,3 @@ services:
 networks:
   proxy-network:
     external: true
-    
