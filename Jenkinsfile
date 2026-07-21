@@ -40,13 +40,16 @@ pipeline {
                     git clean -fd
 
                     echo "🔗 Aplicando .env..."
-                    ln -sf /root/envs/${folder}.env .env
+                    ln -sf /root/projects/envs/${folder}.env .env
 
                     echo "🛑 Derrubando serviço antigo..."
                     docker compose down || true
 
                     echo "🐳 Subindo serviço..."
                     docker compose up -d --build ${service}
+
+                    echo "📋 Status..."
+                    docker compose ps
 
                     echo "✅ Deploy concluído!"
                     """
