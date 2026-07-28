@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main, fln, cxs, fln-dev, cxs-dev]
+  pull_request:
+    branches: [main, fln, cxs, fln-dev, cxs-dev]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-infra-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24.18.0"
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Verify
+        run: |
+          sh scripts/verify.sh
+          npm run test:e2e:list
+
+      - name: Compose
+        env:
+          HA_SITE: ci
+          HA_URL: https://ha.example.test
+          HA_CONFIG_ROOT: /tmp/home-assistant-ci
+        run: |
+          docker compose --env-file .env.example -f docker-compose.yml config --quiet
+          docker compose --env-file .env.example -f docker-compose-prod.yml config --quiet
+
+      - name: Container
+        run: docker build --tag home-assistant/backend:ci .
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
+        with:
+          image: home-assistant/backend:ci
+          artifact-name: home-assistant-backend.spdx.json
+
+      - name: Scan container
+        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        with:
+          image: home-assistant/backend:ci
+          fail-build: true
+          severity-cutoff: high
+
+      - name: Deploy
+        run: echo "Deploy autorizado apenas pelo Jenkins nas branches de site."
