@@ -1,4 +1,4 @@
-name: home-assistant-${HA_SITE:?Defina HA_SITE}-dev
+name: home-assistant-${HA_SITE:?Defina HA_SITE}
 
 x-logging: &default-logging
   driver: json-file
@@ -8,13 +8,13 @@ x-logging: &default-logging
 
 x-labels: &default-labels
   infra.project: home-assistant
-  infra.environment: development
+  infra.environment: production
   infra.site: ${HA_SITE}
   infra.version: ${IMAGE_TAG:-local}
 
 services:
   backend:
-    image: home-assistant/backend:${IMAGE_TAG:-local}-dev
+    image: home-assistant/backend:${IMAGE_TAG:-local}
     labels: *default-labels
     build:
       context: .
@@ -59,7 +59,7 @@ services:
       internal:
       proxy-network:
         aliases:
-          - home-assistant-${HA_SITE}-dev
+          - home-assistant-${HA_SITE}
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
       interval: 10s
@@ -71,6 +71,6 @@ services:
 
 networks:
   internal:
-    name: home-assistant-${HA_SITE}-dev-internal
+    name: home-assistant-${HA_SITE}-internal
   proxy-network:
     external: true
