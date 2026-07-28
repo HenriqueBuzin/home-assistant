@@ -1,6 +1,8 @@
-FROM ghcr.io/home-assistant/home-assistant:stable
+# syntax=docker/dockerfile:1.7
 
-COPY init.sh /init-proxy.sh
-RUN chmod +x /init-proxy.sh
+FROM ghcr.io/home-assistant/home-assistant:2026.7.4
 
-ENTRYPOINT ["/init-proxy.sh"]
+COPY init.sh /usr/local/bin/init-home-assistant
+RUN chmod 0755 /usr/local/bin/init-home-assistant
+
+ENTRYPOINT ["/usr/local/bin/init-home-assistant"]
