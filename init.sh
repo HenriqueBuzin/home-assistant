@@ -1,18 +1,20 @@
-#!/bin/bash
+#!/bin/sh
+set -eu
 
-CONFIG_FILE="/config/configuration.yaml"
-EXTERNAL_URL=${HA_URL}
+config_file="/config/configuration.yaml"
+external_url="${HA_URL:?Defina HA_URL}"
 
 mkdir -p /config
 
-cat <<EOF > "$CONFIG_FILE"
+if [ ! -f "$config_file" ]; then
+cat <<EOF > "$config_file"
 default_config:
 
 frontend:
   themes: !include_dir_merge_named themes
 
 homeassistant:
-  external_url: "${EXTERNAL_URL}"
+  external_url: "${external_url}"
   internal_url: "http://127.0.0.1:8123"
 
 http:
@@ -22,5 +24,6 @@ http:
     - 172.16.0.0/12
     - 172.18.0.0/16
 EOF
+fi
 
 exec /init
