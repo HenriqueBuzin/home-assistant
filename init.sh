@@ -4,7 +4,9 @@ set -eu
 config_file="/config/configuration.yaml"
 external_url="${HA_URL:?Defina HA_URL}"
 
-mkdir -p /config /config/themes
+mkdir -p /config /restore
+python3 /usr/local/bin/restore-home-assistant /restore /config
+mkdir -p /config/themes
 
 if [ ! -f "$config_file" ]; then
 cat <<EOF > "$config_file"
