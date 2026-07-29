@@ -4,7 +4,7 @@ set -eu
 config_file="/config/configuration.yaml"
 external_url="${HA_URL:?Defina HA_URL}"
 
-mkdir -p /config
+mkdir -p /config /config/themes
 
 if [ ! -f "$config_file" ]; then
 cat <<EOF > "$config_file"
