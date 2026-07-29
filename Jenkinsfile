@@ -58,6 +58,20 @@ pipeline {
 
                         cd "\$project_dir"
                         export COMPOSE_PROJECT_NAME="\$project"
+
+                        config_root="\$(sed -n 's/^HA_CONFIG_ROOT=//p' .env | tail -n 1 | tr -d '\r')"
+                        expected_config_root="/root/projects/volumes/\${project}/config"
+                        [ "\$config_root" = "\$expected_config_root" ] || {
+                          echo "HA_CONFIG_ROOT deve ser \$expected_config_root"
+                          exit 1
+                        }
+
+                        docker run --rm \
+                          --entrypoint mkdir \
+                          -v /root/projects/volumes:/volumes \
+                          home-assistant/infra:verify \
+                          -p "/volumes/\${project}/config"
+
                         docker compose --env-file .env -f '${composeFile}' config --quiet
                     """
                 }
