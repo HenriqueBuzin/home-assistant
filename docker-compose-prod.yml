@@ -31,7 +31,9 @@ services:
     expose:
       - "8123"
     networks:
-      - internal
+      proxy-network:
+        aliases:
+          - home-assistant-${HA_SITE}
     healthcheck:
       test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8123/', timeout=3)"]
       interval: 15s
@@ -42,34 +44,6 @@ services:
       - no-new-privileges:true
     logging: *default-logging
 
-  web:
-    image: caddy:2.11.4-alpine
-    labels: *default-labels
-    restart: unless-stopped
-    init: true
-    depends_on:
-      backend:
-        condition: service_healthy
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-    expose:
-      - "80"
-    networks:
-      internal:
-      proxy-network:
-        aliases:
-          - home-assistant-${HA_SITE}
-    healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-    security_opt:
-      - no-new-privileges:true
-    logging: *default-logging
-
 networks:
-  internal:
-    name: home-assistant-${HA_SITE}-internal
   proxy-network:
     external: true
