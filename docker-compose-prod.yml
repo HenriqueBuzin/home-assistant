@@ -20,7 +20,6 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    init: true
     environment:
       TZ: America/Sao_Paulo
       HA_URL: ${HA_URL:?Defina HA_URL}
