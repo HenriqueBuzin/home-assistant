@@ -116,7 +116,10 @@ pipeline {
                         export COMPOSE_PROJECT_NAME='${project}'
                         docker network inspect proxy-network >/dev/null 2>&1 || docker network create proxy-network
                         docker compose --env-file .env -f '${composeFile}' down --timeout 30 || true
-                        docker compose --env-file .env -f '${composeFile}' up -d --remove-orphans
+                        if ! docker compose --env-file .env -f '${composeFile}' up -d --remove-orphans; then
+                          docker compose --env-file .env -f '${composeFile}' logs --tail=200 backend web
+                          exit 1
+                        fi
 
                         attempts=0
                         until [ "\$attempts" -ge 30 ]; do
