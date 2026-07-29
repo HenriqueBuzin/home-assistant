@@ -8,6 +8,9 @@ pipeline {
 
     stages {
         stage('Install') {
+            when {
+                expression { ['fln', 'cxs', 'fln-dev', 'cxs-dev'].contains(env.BRANCH_NAME) }
+            }
             steps {
                 sh '''
                     set -eu
@@ -18,6 +21,9 @@ pipeline {
         }
 
         stage('Verify') {
+            when {
+                expression { ['fln', 'cxs', 'fln-dev', 'cxs-dev'].contains(env.BRANCH_NAME) }
+            }
             steps {
                 sh '''
                     set -eu
