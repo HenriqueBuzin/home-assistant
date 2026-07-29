@@ -117,7 +117,7 @@ pipeline {
                         docker network inspect proxy-network >/dev/null 2>&1 || docker network create proxy-network
                         docker compose --env-file .env -f '${composeFile}' down --timeout 30 || true
                         if ! docker compose --env-file .env -f '${composeFile}' up -d --remove-orphans; then
-                          docker compose --env-file .env -f '${composeFile}' logs --tail=200 backend web
+                          docker compose --env-file .env -f '${composeFile}' logs --tail=200 backend
                           exit 1
                         fi
 
@@ -130,9 +130,12 @@ pipeline {
                         done
 
                         [ "\$attempts" -lt 30 ] || {
-                          docker compose --env-file .env -f '${composeFile}' logs --tail=200 backend web
+                          docker compose --env-file .env -f '${composeFile}' logs --tail=200 backend
                           exit 1
                         }
+                        docker run --rm --network proxy-network \
+                          alpine:3.20 \
+                          wget -q -O /dev/null "http://${project}:8123/"
                         docker compose --env-file .env -f '${composeFile}' ps
                     """
                 }
