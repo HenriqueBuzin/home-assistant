@@ -52,8 +52,6 @@ pipeline {
 
                         cd "\$project_dir"
                         export COMPOSE_PROJECT_NAME="\$project"
-                        export HA_SITE='${site}'
-                        export HA_URL='https://ha-${site}${isDev ? '-dev' : ''}.henriquebuz.in'
                         docker compose --env-file .env -f '${composeFile}' config --quiet
                     """
                 }
@@ -75,8 +73,6 @@ pipeline {
                         set -eu
                         cd '/root/projects/${project}'
                         export COMPOSE_PROJECT_NAME='${project}'
-                        export HA_SITE='${site}'
-                        export HA_URL='https://ha-${site}${isDev ? '-dev' : ''}.henriquebuz.in'
                         docker compose --env-file .env -f '${composeFile}' build --pull backend
                     """
                 }
@@ -98,8 +94,6 @@ pipeline {
                         set -eu
                         cd '/root/projects/${project}'
                         export COMPOSE_PROJECT_NAME='${project}'
-                        export HA_SITE='${site}'
-                        export HA_URL='https://ha-${site}${isDev ? '-dev' : ''}.henriquebuz.in'
                         docker network inspect proxy-network >/dev/null 2>&1 || docker network create proxy-network
                         docker compose --env-file .env -f '${composeFile}' down --timeout 30 || true
                         docker compose --env-file .env -f '${composeFile}' up -d --remove-orphans
