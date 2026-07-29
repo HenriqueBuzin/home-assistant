@@ -12,7 +12,7 @@ pipeline {
                 sh '''
                     set -eu
                     docker compose version
-                    npm ci --no-audit --no-fund
+                    echo 'Dependencias Node/npm sao instaladas no build multi-stage.'
                 '''
             }
         }
@@ -22,7 +22,7 @@ pipeline {
                 sh '''
                     set -eu
                     sh scripts/verify.sh
-                    npm run test:e2e:list
+                    docker build --target verify --tag home-assistant/infra:verify .
                 '''
             }
         }
