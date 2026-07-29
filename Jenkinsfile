@@ -70,7 +70,7 @@ pipeline {
                           --entrypoint mkdir \
                           -v /root/projects/volumes:/volumes \
                           home-assistant/infra:verify \
-                          -p "/volumes/\${project}/config"
+                          -p "/volumes/\${project}/config" "/volumes/\${project}/restore"
 
                         docker compose --env-file .env -f '${composeFile}' config --quiet
                     """
