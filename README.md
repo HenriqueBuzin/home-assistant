@@ -1,6 +1,6 @@
 # Home Assistant
 
-Infraestrutura multi-site para Home Assistant 2026.7.4 atrás de Caddy 2.11.4.
+Infraestrutura multi-site para Home Assistant 2026.7.4 publicado diretamente pelo proxy reverso externo.
 
 ## Branches
 
@@ -12,10 +12,9 @@ Cada ambiente recebe por `.env` externo o site, a URL pública e o diretório pe
 
 ## Serviços
 
-- `backend`: Home Assistant.
-- `web`: Caddy, conectado à `proxy-network`.
+- `backend`: Home Assistant, conectado à `proxy-network` com alias por ambiente e porta interna `8123`.
 
-Não há Nginx, profiles, banco de dados ou Redis no projeto.
+O Nginx Proxy Manager externo encaminha HTTP para o alias do ambiente na porta `8123`, com WebSocket habilitado. Não há Caddy, profiles, banco de dados ou Redis no projeto.
 
 ## Validação
 
