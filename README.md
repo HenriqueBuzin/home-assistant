@@ -10,6 +10,16 @@ Infraestrutura multi-site para Home Assistant 2026.7.4 publicado diretamente pel
 
 Cada ambiente recebe por `.env` externo o site, a URL pública e o diretório persistente. Jenkins cria o link simbólico; nenhum dado ou segredo fica no Git.
 
+## Restauração inicial
+
+Cada ambiente possui uma pasta própria em `/root/projects/volumes/home-assistant-<site>[-dev]/restore`. Para iniciar um ambiente vazio a partir de backup:
+
+1. deixe `config/` vazio;
+2. coloque exatamente um arquivo `.tar`, `.tar.gz` ou `.tgz` em `restore/`;
+3. execute o deploy da branch correspondente.
+
+O bootstrap aceita um tar direto da configuração ou um backup oficial descriptografado que contenha `homeassistant.tar[.gz]`. Configuração existente nunca é sobrescrita. Backup ausente inicia uma instalação nova; arquivo inválido, criptografado ou múltiplos backups interrompem o container com erro explícito.
+
 ## Serviços
 
 - `backend`: Home Assistant, conectado à `proxy-network` com alias por ambiente e porta interna `8123`.

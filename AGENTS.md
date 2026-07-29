@@ -8,6 +8,8 @@ Este repositório descreve toda a infraestrutura multi-site do Home Assistant.
 - O backend atende na porta interna 8123 e participa diretamente da rede externa `proxy-network`.
 - `init.sh` cria `/config/configuration.yaml` apenas quando ele ainda não existe, habilitando proxy confiável e a URL externa.
 - Dados persistentes ficam em `HA_CONFIG_ROOT`, fora do checkout.
+- Cada projeto mantém `/root/projects/volumes/home-assistant-<site>[-dev]/restore`, montado somente para leitura em `/restore`.
+- Antes de criar a configuração padrão, o entrypoint restaura automaticamente um único `.tar`, `.tar.gz` ou `.tgz` quando `/config` está vazio. Aceita tar direto de configuração ou backup oficial descriptografado com `homeassistant.tar[.gz]`; nunca sobrescreve configuração existente e falha cedo para backup inválido, criptografado, inseguro ou ambíguo.
 
 ## Compose
 
@@ -27,7 +29,7 @@ O serviço tem alias `home-assistant-<site>[-dev]`, labels de projeto/ambiente/s
 - `cxs-dev`: `HA_SITE=cxs`, desenvolvimento.
 - `main`: não faz deploy; mantém a fonte comum.
 
-Arquivos de ambiente ficam em `/root/projects/envs/home-assistant-<site>[-dev].env` e são ligados simbolicamente como `.env`. O diretório de deploy segue o mesmo nome do projeto Compose.
+Arquivos de ambiente ficam em `/root/projects/envs/home-assistant-<site>[-dev].env` e são ligados simbolicamente como `.env`. O diretório de deploy segue o mesmo nome do projeto Compose. Jenkins provisiona `config/` e `restore/` no volume específico de cada projeto.
 
 ## Variáveis
 
@@ -39,4 +41,4 @@ GitHub Actions e Jenkins usam as etapas `Install`, `Verify`, `Compose`, `Contain
 
 ## Reconstrução
 
-Para recriar o serviço, gere os dois Compose com os contratos acima, o Dockerfile baseado na versão fixada do Home Assistant, o `init.sh`, os pipelines e os testes. Crie `proxy-network`, o diretório persistente e o `.env` externo antes de subir o ambiente.
+Para recriar o serviço, gere os dois Compose com os contratos acima, o Dockerfile baseado na versão fixada do Home Assistant, o `init.sh`, o restaurador seguro, os pipelines e os testes. Crie `proxy-network`, os diretórios persistentes `config/` e `restore/` e o `.env` externo antes de subir o ambiente.

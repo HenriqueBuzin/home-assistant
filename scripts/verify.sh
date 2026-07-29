@@ -24,3 +24,5 @@ grep -Eq 'home-assistant-\$\{HA_SITE\}-dev' docker-compose.yml
 grep -Eq 'home-assistant-\$\{HA_SITE\}' docker-compose-prod.yml
 grep -Eq '"8123"' docker-compose.yml
 grep -Eq '"8123"' docker-compose-prod.yml
+grep -Eq '/root/projects/volumes/home-assistant-\$\{HA_SITE\}-dev/restore' docker-compose.yml
+grep -Eq '/root/projects/volumes/home-assistant-\$\{HA_SITE\}/restore' docker-compose-prod.yml
