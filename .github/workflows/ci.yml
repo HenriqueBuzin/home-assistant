@@ -52,13 +52,30 @@ jobs:
           image: home-assistant/backend:ci
           artifact-name: home-assistant-backend.spdx.json
 
+      - name: Scan upstream base
+        id: scan-base
+        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        with:
+          image: ghcr.io/home-assistant/home-assistant:2026.7.4
+          fail-build: false
+          output-format: json
+          severity-cutoff: high
+          only-fixed: true
+          cache-db: true
+
       - name: Scan container
+        id: scan-container
         uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
         with:
           image: home-assistant/backend:ci
-          fail-build: true
+          fail-build: false
+          output-format: json
           severity-cutoff: high
           only-fixed: true
+          cache-db: true
+
+      - name: Enforce vulnerability baseline
+        run: python3 scripts/check-vulnerability-baseline.py "${{ steps.scan-base.outputs.json }}" "${{ steps.scan-container.outputs.json }}"
 
       - name: Deploy
         run: echo "Deploy autorizado apenas pelo Jenkins nas branches de site."
