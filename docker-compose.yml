@@ -27,6 +27,12 @@ services:
       - type: bind
         source: ${HA_CONFIG_ROOT:?Defina HA_CONFIG_ROOT}
         target: /config
+      - type: bind
+        source: /root/projects/volumes/home-assistant-${HA_SITE}-dev/restore
+        target: /restore
+        read_only: true
+        bind:
+          create_host_path: false
       - /etc/localtime:/etc/localtime:ro
     expose:
       - "8123"
