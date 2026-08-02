@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-FROM node:24.18.0-bookworm-slim AS verify
+FROM node:24.18.1-bookworm-slim AS verify
 
 WORKDIR /workspace
 
