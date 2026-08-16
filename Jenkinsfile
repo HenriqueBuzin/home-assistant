@@ -43,14 +43,19 @@ pipeline {
                     def site = env.BRANCH_NAME.replaceFirst(/-dev$/, '')
                     def project = "home-assistant-${site}${isDev ? '-dev' : ''}"
                     def composeFile = isDev ? 'docker-compose.yml' : 'docker-compose-prod.yml'
+                    def environment = isDev ? 'dev' : 'prod'
+                    def envName = isDev ? "${project}.env" : "${project}-prod.env"
 
                     sh """
                         set -eu
                         project='${project}'
                         project_dir="/root/projects/\${project}"
-                        env_file="/root/projects/envs/\${project}.env"
+                        env_dir='/root/projects/envs/home-assistant/${site}/${environment}'
+                        env_file="\${env_dir}/${envName}"
+                        secrets_dir="\${env_dir}/secrets"
 
                         test -f "\$env_file"
+                        test -d "\$secrets_dir"
                         install -d -m 0755 "\$project_dir"
                         find "\$project_dir" -mindepth 1 -maxdepth 1 ! -name '.env' -exec rm -rf -- {} +
                         cp -a "\$WORKSPACE"/. "\$project_dir"/
