@@ -22,14 +22,25 @@ A branch `main` mantém a fonte comum alinhada, mas não faz deploy pelo Jenkins
 
 ## Arquivos de ambiente
 
-Os arquivos reais ficam fora do Git:
+Os arquivos reais ficam fora do Git, isolados por site e ambiente:
 
-- `/root/projects/envs/home-assistant-cxs.env`
-- `/root/projects/envs/home-assistant-cxs-dev.env`
-- `/root/projects/envs/home-assistant-fln.env`
-- `/root/projects/envs/home-assistant-fln-dev.env`
+```text
+/root/projects/envs/home-assistant/
+├── cxs/
+│   ├── dev/home-assistant-cxs-dev.env
+│   ├── dev/secrets/
+│   ├── prod/home-assistant-cxs-prod.env
+│   └── prod/secrets/
+└── fln/
+    ├── dev/home-assistant-fln-dev.env
+    ├── dev/secrets/
+    ├── prod/home-assistant-fln-prod.env
+    └── prod/secrets/
+```
 
-O Jenkins cria um link simbólico chamado `.env` no diretório de cada projeto. Cada arquivo define:
+Os `.env` usam permissão `0600`; cada pasta `secrets/`, reservada para arquivos secretos daquele ambiente, usa `0700`. O Home Assistant não depende atualmente de arquivos dentro de `secrets/`.
+
+O Jenkins cria um link simbólico chamado `.env` no diretório de cada projeto e exige que a pasta `secrets/` correspondente exista. Cada arquivo define:
 
 - `HA_SITE`: `cxs` ou `fln`;
 - `HA_URL`: URL pública completa do ambiente;

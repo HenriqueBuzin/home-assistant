@@ -30,10 +30,10 @@ A reconstrução deve produzir:
 
 | Branch | Site | Tipo | Projeto e diretório | Ambiente externo | Volume raiz | Alias |
 | --- | --- | --- | --- | --- | --- | --- |
-| `cxs` | `cxs` | produção | `home-assistant-cxs` | `home-assistant-cxs.env` | `home-assistant-cxs` | `home-assistant-cxs` |
-| `cxs-dev` | `cxs` | desenvolvimento | `home-assistant-cxs-dev` | `home-assistant-cxs-dev.env` | `home-assistant-cxs-dev` | `home-assistant-cxs-dev` |
-| `fln` | `fln` | produção | `home-assistant-fln` | `home-assistant-fln.env` | `home-assistant-fln` | `home-assistant-fln` |
-| `fln-dev` | `fln` | desenvolvimento | `home-assistant-fln-dev` | `home-assistant-fln-dev.env` | `home-assistant-fln-dev` | `home-assistant-fln-dev` |
+| `cxs` | `cxs` | produção | `home-assistant-cxs` | `home-assistant/cxs/prod/home-assistant-cxs-prod.env` | `home-assistant-cxs` | `home-assistant-cxs` |
+| `cxs-dev` | `cxs` | desenvolvimento | `home-assistant-cxs-dev` | `home-assistant/cxs/dev/home-assistant-cxs-dev.env` | `home-assistant-cxs-dev` | `home-assistant-cxs-dev` |
+| `fln` | `fln` | produção | `home-assistant-fln` | `home-assistant/fln/prod/home-assistant-fln-prod.env` | `home-assistant-fln` | `home-assistant-fln` |
+| `fln-dev` | `fln` | desenvolvimento | `home-assistant-fln-dev` | `home-assistant/fln/dev/home-assistant-fln-dev.env` | `home-assistant-fln-dev` | `home-assistant-fln-dev` |
 
 `main` deve permanecer alinhada com a fonte compartilhada, mas o Jenkins precisa ignorá-la. O filtro do multibranch job também deve excluir `main`; a proteção no próprio Jenkinsfile continua obrigatória.
 
@@ -139,7 +139,7 @@ Variáveis:
 - `HA_CONFIG_ROOT`, obrigatória, aponta exatamente para `/root/projects/volumes/<projeto>/config`;
 - `IMAGE_TAG`, opcional, identifica a imagem e usa valor local previsível quando ausente.
 
-Na VPS, os arquivos ficam em `/root/projects/envs/<projeto>.env`. Jenkins cria um link simbólico `.env` no diretório `/root/projects/<projeto>`. Não copiar o conteúdo do arquivo externo para o Git e não criar uma hierarquia paralela de segredos.
+Na VPS, cada ambiente fica em `/root/projects/envs/home-assistant/<site>/<dev|prod>/`. O diretório contém seu `.env` e uma pasta `secrets/` exclusiva, com permissões `0600` e `0700`, respectivamente. Produção usa `home-assistant-<site>-prod.env`; desenvolvimento usa `home-assistant-<site>-dev.env`. Jenkins cria um link simbólico `.env` no diretório `/root/projects/<projeto>` e valida a existência do `secrets/` correspondente. Não copiar o conteúdo do arquivo externo nem segredos para o Git.
 
 ## Jenkins
 
