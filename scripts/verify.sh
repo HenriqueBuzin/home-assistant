@@ -26,3 +26,7 @@ grep -Eq '"8123"' docker-compose.yml
 grep -Eq '"8123"' docker-compose-prod.yml
 grep -Eq '/root/projects/volumes/home-assistant-\$\{HA_SITE\}-dev/restore' docker-compose.yml
 grep -Eq '/root/projects/volumes/home-assistant-\$\{HA_SITE\}/restore' docker-compose-prod.yml
+
+grep -Fq "env_dir='/root/projects/envs/home-assistant/\${site}/\${environment}'" Jenkinsfile
+grep -Fq 'def envName = isDev ? "${project}.env" : "${project}-prod.env"' Jenkinsfile
+grep -Fq 'test -d "\$secrets_dir"' Jenkinsfile
